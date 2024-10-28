@@ -35,7 +35,7 @@ public class Task {
     /** Indicates whether the task is completed or not. */
     private boolean complete;
     /** The due date by which the task should be completed. */
-    private LocalDate dueTime;
+    private LocalDate dueDate;
     /** The timestamp when the task was created. */
     private LocalDateTime createAt;
     /** The timestamp when the task was last updated. */
