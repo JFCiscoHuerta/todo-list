@@ -95,7 +95,7 @@ public class TaskServiceImpl implements ITaskService {
         Task originalTask = getTaskById(id);
         originalTask.setName(task.getName());
         originalTask.setComplete(task.isComplete());
-        originalTask.setDueTime(task.getDueTime());
+        originalTask.setDueDate(task.getDueDate());
         originalTask.setUpdateAt(LocalDateTime.now());
         return taskRepository.save(originalTask);
     }
