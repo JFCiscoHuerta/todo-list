@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,7 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/v1/tasks/update-task/{id}",
                                 "/v1/tasks/update-complete-task/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/tasks/delete-task/{id}").permitAll()
-        );
+        )
+                .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
