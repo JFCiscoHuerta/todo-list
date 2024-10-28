@@ -6,6 +6,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Utility class that contains sample data for {@link Task} entities.
+ * <p>
+ * This class provides static instances of tasks and a list of tasks to be used for testing or initialization purposes.
+ * </p>
+ *
+ * @author JFCiscoHuerta
+ * @version 1.0
+ * @since 28-Oct-2024
+ */
 public class Data {
 
     public final static Task TASK = new Task(1L, "Buy Milk", false, LocalDate.of(2024, 10, 31), LocalDateTime.now(), LocalDateTime.now());
