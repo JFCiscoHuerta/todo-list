@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/v1/tasks/update-task/{id}",
                                 "/v1/tasks/update-complete-task/{id}").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/v1/tasks/delete-task/{id}").permitAll()
+                        .anyRequest().permitAll()
         )
                 .csrf(AbstractHttpConfigurer::disable);
         return http.build();
