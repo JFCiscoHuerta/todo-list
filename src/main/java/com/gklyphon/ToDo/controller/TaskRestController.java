@@ -3,6 +3,13 @@ package com.gklyphon.ToDo.controller;
 import com.gklyphon.ToDo.model.entity.Task;
 import com.gklyphon.ToDo.repository.ITaskRepository;
 import com.gklyphon.ToDo.service.ITaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -27,6 +34,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
+@Tag(name = "Tasks", description = "Operations related to task management")
 public class TaskRestController {
 
     private final ITaskService taskService;
@@ -37,6 +45,13 @@ public class TaskRestController {
      * @return a {@link ResponseEntity} containing the list of tasks or an HTTP status
      *         indicating that no tasks are available.
      */
+    @Operation(summary = "Get all tasks", description = "Retrieves a list of all tasks.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "List of tasks retrieved",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "204", description = "No tasks available")
+    })
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
@@ -53,8 +68,16 @@ public class TaskRestController {
      * @return a {@link ResponseEntity} containing the task or an HTTP status
      *         indicating that the task was not found.
      */
+    @Operation(summary = "Get a task by ID", description = "Retrieves a specific task by its ID.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Task found",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Task> getById(
+            @Parameter(description = "ID of the task to retrieve", required = true, example = "1")
             @PathVariable Long id
     ) {
         Task task = taskService.getTaskById(id);
@@ -69,10 +92,18 @@ public class TaskRestController {
      * @return a {@link ResponseEntity} with the created task or a list of error messages
      *         if validation fails.
      */
+    @Operation(summary = "Create a new task", description = "Creates a new task.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Task created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid task details")
+    })
     @PostMapping("/create-task")
     public ResponseEntity<?> save(
+            @Parameter(description = "Task object to create", required = true)
             @Valid @RequestBody Task task,
-            BindingResult result
+            @Parameter(hidden = true) BindingResult result
     ) {
         if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
@@ -91,8 +122,16 @@ public class TaskRestController {
      * @param id the ID of the task to delete
      * @return a {@link ResponseEntity} indicating the result of the deletion.
      */
+    @Operation(summary = "Create a new task", description = "Creates a new task.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Task created",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid task details")
+    })
     @DeleteMapping("/delete-task/{id}")
     public ResponseEntity<?> deleteTask(
+            @Parameter(description = "ID of the task to delete", required = true, example = "1")
             @PathVariable Long id
     ) {
         if (id<=0) {
@@ -116,10 +155,21 @@ public class TaskRestController {
      * @return a {@link ResponseEntity} with the updated task or a list of error messages
      *         if validation fails.
      */
+    @Operation(summary = "Update a task", description = "Updates the details of an existing task.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Task updated",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid task details"),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @PutMapping("/update-task/{id}")
     public ResponseEntity<?> updateTask(
+            @Parameter(description = "ID of the task to update", required = true, example = "1")
             @PathVariable Long id,
-            @Valid @RequestBody Task task, BindingResult result
+            @Parameter(description = "Updated task object", required = true)
+            @Valid @RequestBody Task task,
+            @Parameter(hidden = true) BindingResult result
     ) {
         if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
@@ -140,9 +190,19 @@ public class TaskRestController {
      * @param complete the new completion status
      * @return a {@link ResponseEntity} containing the updated task.
      */
+    @Operation(summary = "Update task completion status",
+            description = "Updates the completion status of a task.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Task status updated",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Task.class))),
+            @ApiResponse(responseCode = "404", description = "Task not found")
+    })
     @PutMapping("/update-complete-task/{id}")
     public ResponseEntity<?> updateCompleteTask(
+            @Parameter(description = "ID of the task to update", required = true, example = "1")
             @PathVariable Long id,
+            @Parameter(description = "New completion status of the task", required = true, example = "true")
             @RequestParam boolean complete
     ) {
         Task task = taskService.updateTaskComplete(id, complete);
