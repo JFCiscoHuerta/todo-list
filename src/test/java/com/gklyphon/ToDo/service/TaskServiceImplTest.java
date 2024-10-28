@@ -18,6 +18,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the {@link TaskServiceImpl} class.
+ * <p>
+ * This class tests the various functionalities of the Task service, including retrieving, saving, updating, and deleting tasks.
+ * It uses Mockito for mocking dependencies and assertions to verify expected behavior.
+ * </p>
+ *
+ * @author JFCiscoHuerta
+ * @version 1.0
+ * @since 28-Oct-2024
+ */
 @ExtendWith(MockitoExtension.class)
 class TaskServiceImplTest {
 
@@ -27,6 +38,12 @@ class TaskServiceImplTest {
     @InjectMocks
     TaskServiceImpl taskService;
 
+    /**
+     * Test for retrieving all tasks.
+     * <p>
+     * This test verifies that the method returns a non-empty list of tasks and checks the properties of the first task.
+     * </p>
+     */
     @Test
     void shouldRetrieveAllTasks() {
         when(taskRepository.findAll()).thenReturn(Data.TASKS);
@@ -41,6 +58,12 @@ class TaskServiceImplTest {
         verify(taskRepository).findAll();
     }
 
+    /**
+     * Test for retrieving a task by its ID.
+     * <p>
+     * This test checks that the correct task is returned when a valid ID is provided.
+     * </p>
+     */
     @Test
     void shouldRetrieveTaskById() {
         when(taskRepository.findById(anyLong())).thenReturn(Optional.of(Data.TASK));
@@ -53,6 +76,12 @@ class TaskServiceImplTest {
         verify(taskRepository).findById(anyLong());
     }
 
+    /**
+     * Test for retrieving a task by its ID.
+     * <p>
+     * This test checks that the correct task is returned when a valid ID is provided.
+     * </p>
+     */
     @Test
     void shouldThrowElementNotFoundExceptionWhenIdDoesNotExists() {
         doThrow(ElementNotFoundException.class).when(taskRepository).findById(1000L);
@@ -62,6 +91,12 @@ class TaskServiceImplTest {
         verify(taskRepository).findById(anyLong());
     }
 
+    /**
+     * Test for saving a task.
+     * <p>
+     * This test checks that the saved task is returned correctly.
+     * </p>
+     */
     @Test
     void shouldRetrieveTaskWhenSave() {
         when(taskRepository.save(any(Task.class))).thenReturn(Data.TASK);
@@ -74,6 +109,12 @@ class TaskServiceImplTest {
         verify(taskRepository).save(any(Task.class));
     }
 
+    /**
+     * Test for deleting a task.
+     * <p>
+     * This test verifies that the deletion method returns true when the task exists.
+     * </p>
+     */
     @Test
     void shouldRetrieveTrueWhenDeleteTask() {
         when(taskRepository.existsById(anyLong())).thenReturn(true);
@@ -83,6 +124,12 @@ class TaskServiceImplTest {
         verify(taskRepository).existsById(anyLong());
     }
 
+    /**
+     * Test for updating a task.
+     * <p>
+     * This test checks that the updated task is returned correctly after modification.
+     * </p>
+     */
     @Test
     void shouldRetrieveTaskWhenUpdateTask() {
         when(taskRepository.save(any(Task.class))).thenReturn(Data.TASK);
@@ -97,6 +144,12 @@ class TaskServiceImplTest {
         verify(taskRepository).findById(anyLong());
     }
 
+    /**
+     * Test for updating the completion status of a task.
+     * <p>
+     * This test checks that the task's completion status is updated correctly.
+     * </p>
+     */
     @Test
     void shouldRetrieveTaskWhenUpdateCompleteTask() {
         when(taskRepository.save(any(Task.class))).thenReturn(Data.TASK);

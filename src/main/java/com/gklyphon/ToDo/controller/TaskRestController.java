@@ -14,6 +14,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller for managing tasks.
+ * <p>
+ * This controller provides endpoints to create, retrieve, update, and delete tasks.
+ * </p>
+ *
+ * @author JFCiscoHuerta
+ * @version 1.0
+ * @since 28-Oct-2024
+ */
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
@@ -21,6 +31,12 @@ public class TaskRestController {
 
     private final ITaskService taskService;
 
+    /**
+     * Retrieves all tasks from the service.
+     *
+     * @return a {@link ResponseEntity} containing the list of tasks or an HTTP status
+     *         indicating that no tasks are available.
+     */
     @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
@@ -30,6 +46,13 @@ public class TaskRestController {
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
+    /**
+     * Retrieves a task by its ID.
+     *
+     * @param id the ID of the task to retrieve
+     * @return a {@link ResponseEntity} containing the task or an HTTP status
+     *         indicating that the task was not found.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Task> getById(
             @PathVariable Long id
@@ -38,6 +61,14 @@ public class TaskRestController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
+    /**
+     * Creates a new task.
+     *
+     * @param task the task to create
+     * @param result the binding result containing validation errors, if any
+     * @return a {@link ResponseEntity} with the created task or a list of error messages
+     *         if validation fails.
+     */
     @PostMapping("/create-task")
     public ResponseEntity<?> save(
             @Valid @RequestBody Task task,
@@ -54,6 +85,12 @@ public class TaskRestController {
         return new ResponseEntity<>(taskCreated, HttpStatus.CREATED);
     }
 
+    /**
+     * Deletes a task by its ID.
+     *
+     * @param id the ID of the task to delete
+     * @return a {@link ResponseEntity} indicating the result of the deletion.
+     */
     @DeleteMapping("/delete-task/{id}")
     public ResponseEntity<?> deleteTask(
             @PathVariable Long id
@@ -70,6 +107,15 @@ public class TaskRestController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Updates an existing task by its ID.
+     *
+     * @param id the ID of the task to update
+     * @param task the updated task details
+     * @param result the binding result containing validation errors, if any
+     * @return a {@link ResponseEntity} with the updated task or a list of error messages
+     *         if validation fails.
+     */
     @PutMapping("/update-task/{id}")
     public ResponseEntity<?> updateTask(
             @PathVariable Long id,
@@ -87,6 +133,13 @@ public class TaskRestController {
         return new ResponseEntity<>(taskUpdated, HttpStatus.OK);
     }
 
+    /**
+     * Updates the completion status of a task.
+     *
+     * @param id the ID of the task to update
+     * @param complete the new completion status
+     * @return a {@link ResponseEntity} containing the updated task.
+     */
     @PutMapping("/update-complete-task/{id}")
     public ResponseEntity<?> updateCompleteTask(
             @PathVariable Long id,
